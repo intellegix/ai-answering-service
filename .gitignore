@@ -1,0 +1,114 @@
+# AI Answering Service - Git Ignore File
+# Austin Kidwell | ASR Inc / Intellegix
+
+# Environment Variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+
+# Flask
+instance/
+.webassets-cache
+.scrapy
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.node_repl_history
+*.tgz
+package-lock.json
+yarn.lock
+
+# React
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+db.sqlite3
+postgres_data/
+
+# IDE & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+backend/logs/
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Render deployment
+.render/
+
+# Twilio webhook logs
+twilio_logs/
+
+# AI service responses (for debugging)
+claude_responses/
+openai_responses/
+
+# Call recordings (if storing locally)
+recordings/
+
+# Backup files
+*.bak
+*.backup
+backup/
+
+# Test files
+test_calls/
+mock_data/

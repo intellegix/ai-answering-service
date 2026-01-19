@@ -1,0 +1,137 @@
+# AI Answering Service - Render Deployment Configuration
+# Austin Kidwell | ASR Inc / Intellegix
+# Deploys Flask backend, Node.js conversation relay, React frontend, and PostgreSQL
+
+databases:
+  - name: ai-answering-db
+    databaseName: ai_answering_service
+    user: ai_admin
+    region: oregon
+
+services:
+  # Flask Backend API
+  - type: web
+    name: ai-secretary-backend
+    env: python
+    region: oregon
+    buildCommand: |
+      cd backend &&
+      pip install -r requirements.txt
+    startCommand: |
+      cd backend &&
+      gunicorn -w 4 -b 0.0.0.0:$PORT app:app --timeout 120
+    healthCheckPath: /health
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-answering-db
+          property: connectionString
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        sync: false
+      - key: PERPLEXITY_API_KEY
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO
+      - key: PORT
+        value: 5000
+    autoDeploy: false
+    disk:
+      name: backend-disk
+      mountPath: /opt/render/project/backend/logs
+      sizeGB: 1
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 80
+      targetCPUPercent: 70
+
+  # Node.js Conversation Relay Service
+  - type: web
+    name: ai-conversation-relay
+    env: node
+    region: oregon
+    buildCommand: |
+      cd backend &&
+      npm install
+    startCommand: |
+      cd backend &&
+      node conversation_relay.js
+    healthCheckPath: /relay/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RELAY_PORT
+        value: 5001
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+    autoDeploy: false
+    scaling:
+      minInstances: 1
+      maxInstances: 2
+      targetMemoryPercent: 80
+      targetCPUPercent: 70
+
+  # React Frontend
+  - type: static
+    name: ai-secretary-frontend
+    buildCommand: |
+      cd frontend &&
+      npm install &&
+      npm run build
+    staticPublishPath: frontend/build
+    pullRequestPreviewsEnabled: false
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://ai-secretary-backend.onrender.com
+      - key: NODE_ENV
+        value: production
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - path: /static/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    autoDeploy: false
+
+# Background Jobs (optional for future enhancements)
+# - type: worker
+#   name: ai-call-processor
+#   env: python
+#   region: oregon
+#   buildCommand: |
+#     cd backend &&
+#     pip install -r requirements.txt
+#   startCommand: |
+#     cd backend &&
+#     python worker.py
+#   envVars:
+#     - key: DATABASE_URL
+#       fromDatabase:
+#         name: ai-answering-db
+#         property: connectionString
+#     - key: ANTHROPIC_API_KEY
+#       sync: false
+#   autoDeploy: false

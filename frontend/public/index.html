@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2563eb" />
+    <meta name="description" content="AI Answering Service - Call management dashboard for ASR Inc and Intellegix" />
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Preconnect to API for faster loading -->
+    <link rel="preconnect" href="https://ai-secretary-backend.onrender.com" />
+
+    <title>AI Answering Service | ASR Inc / Intellegix</title>
+  </head>
+  <body>
+    <noscript>
+      <div style="padding: 2rem; text-align: center; font-family: sans-serif;">
+        <h1>JavaScript Required</h1>
+        <p>You need to enable JavaScript to run this app.</p>
+        <p>The AI Answering Service dashboard requires JavaScript for real-time call management.</p>
+      </div>
+    </noscript>
+    <div id="root"></div>
+
+    <!-- Performance monitoring (optional) -->
+    <script>
+      // Simple performance tracking
+      window.addEventListener('load', function() {
+        if ('performance' in window) {
+          console.log('App loaded in', performance.now().toFixed(2), 'ms');
+        }
+      });
+    </script>
+  </body>
+</html>
