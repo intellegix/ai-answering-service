@@ -83,38 +83,32 @@ services:
       targetMemoryPercent: 80
       targetCPUPercent: 70
 
-  # React Frontend
-  - type: static
+  # React Frontend (served via Express)
+  - type: web
     name: ai-secretary-frontend
+    env: node
+    region: oregon
     buildCommand: |
       cd frontend &&
       npm install &&
       npm run build
-    staticPublishPath: frontend/build
-    pullRequestPreviewsEnabled: false
+    startCommand: |
+      cd frontend &&
+      npx serve -s build -l 3000
+    healthCheckPath: /
     envVars:
       - key: REACT_APP_API_URL
         value: https://ai-secretary-backend.onrender.com
       - key: NODE_ENV
         value: production
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    headers:
-      - path: /*
-        name: X-Frame-Options
-        value: DENY
-      - path: /*
-        name: X-Content-Type-Options
-        value: nosniff
-      - path: /*
-        name: Referrer-Policy
-        value: strict-origin-when-cross-origin
-      - path: /static/*
-        name: Cache-Control
-        value: public, max-age=31536000, immutable
+      - key: PORT
+        value: 3000
     autoDeploy: false
+    scaling:
+      minInstances: 1
+      maxInstances: 2
+      targetMemoryPercent: 80
+      targetCPUPercent: 70
 
 # Background Jobs (optional for future enhancements)
 # - type: worker
