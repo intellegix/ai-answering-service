@@ -45,10 +45,6 @@ services:
       - key: PORT
         value: 5000
     autoDeploy: false
-    disk:
-      name: backend-disk
-      mountPath: /opt/render/project/backend/logs
-      sizeGB: 1
     scaling:
       minInstances: 1
       maxInstances: 3
